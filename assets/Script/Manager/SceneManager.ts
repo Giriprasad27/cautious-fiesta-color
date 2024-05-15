@@ -29,6 +29,12 @@ export class SceneManager extends Component {
     public startGamePlay():void{
         this.CardManager.startGame();
     }
+    public pauseGamePlay(val : boolean):void{
+        if(val){
+            this.UIManager.showPauseScreen();
+        }
+        this.CardManager.pauseGame(val);
+    }
 
     public onCardMatchFail(): void{
         this.UIManager.showGameOverScreen();

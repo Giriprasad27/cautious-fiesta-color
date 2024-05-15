@@ -29,7 +29,7 @@ export class CardManager extends Component {
 
     // private paramenters
     private _cards: CardCtrl[] = [];
-
+    private intervalId: number | undefined;
     //gameData
     private _scoreIncrementor : number = 10;
     private _turns: number[] = [];
@@ -37,6 +37,7 @@ export class CardManager extends Component {
     private _isPlayerTurn :boolean = false;
     private _playerTurnCounter :number = 0;
     private _isGameCompleted : boolean = false;
+    private _isGamePaused : boolean = false;
     private _type : Difficulty = Difficulty.Easy;
 
     private _sceneManager: SceneManager;
@@ -65,11 +66,22 @@ export class CardManager extends Component {
         this._turns = [];
         this._score = 0;
         this._isGameCompleted = false;
+        this._isGamePaused = false;
     }
 
     public startGame():void{
         this.playInitEffects(100);
         this.playCpuTurn();
+    }
+
+    public pauseGame(val : boolean):void{
+        this._isGamePaused = val;
+        if(!this._isGamePaused){
+            this.loopCputurn();
+        }
+        else{
+            clearInterval(this.intervalId);
+        }
     }
 
     public ClearGrid():void{
@@ -118,7 +130,7 @@ export class CardManager extends Component {
     }
 
     private onCardButtonClick = (card: CardCtrl): void => {
-        if(this._isPlayerTurn && !this._isGameCompleted){
+        if(this._isPlayerTurn && !this._isGamePaused && !this._isGameCompleted){
             card.onPlayEffects();
             this.checkForCardMarch(card.cardId);
             if(this._playerTurnCounter == this._turns.length){
@@ -166,11 +178,15 @@ export class CardManager extends Component {
         if(CardManager.onTurnChange){
             CardManager.onTurnChange("CPU");
         }
+        let randomId = Math.floor(Math.random() * this._cards.length);
+        this._turns.push(randomId);
+        this.loopCputurn();
+    }
+
+    private loopCputurn():void {
         setTimeout(() => {
             let index = 0;
-            let randomId = Math.floor(Math.random() * this._cards.length);
-            this._turns.push(randomId);
-            const intervalId = setInterval(() => {
+            this.intervalId = setInterval(() => {
                 if (index < this._turns.length) {
                     this._cards[this._turns[index]].onPlayEffects();
                     index++;
@@ -181,11 +197,10 @@ export class CardManager extends Component {
                         CardManager.onTurnChange("USER");
                     }
                     console.log("playEffects ends "+this._isPlayerTurn+"  "+this._playerTurnCounter);
-                    clearInterval(intervalId); // Stop the interval when all elements have been processed
+                    clearInterval(this.intervalId); // Stop the interval when all elements have been processed
                 }
             }, 600);//wait time between each cpu turn
-        }, 2000); // wait time to start cpu turn
-        
+        }, 1000); // wait time to start cpu turn
     }
 }
 

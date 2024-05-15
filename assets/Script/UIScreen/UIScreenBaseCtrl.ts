@@ -23,10 +23,9 @@ export class UIScreenBaseCtrl extends Component {
         } else {
             this.node.active = false;
         }
-        this.node.active = false;
     }
 
-    onFinishHideAnimation(): void {
+    public onFinishHideAnimation(): void {
         this.node.active = false;
     }
 }

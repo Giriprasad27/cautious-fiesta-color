@@ -52,8 +52,9 @@ export class UIManager extends Component {
 
     public showPauseScreen(): void{
         let option: PauseScreenOption = {
-            callback: this.menuScreenCallBack.bind(this)
+            callback: this.pauseScreenCallBack.bind(this)
         };
+        this.InGameScreen.hide();
         this.PauseScreen.init(option);
     }
 
@@ -80,6 +81,7 @@ export class UIManager extends Component {
     private inGameScreenCallBack = (type: string): void => {
         switch (type) {
             case "pausebutton":
+                this._sceneManager.pauseGamePlay(true);
                 break;
             case "taptostart":
                 this._sceneManager.startGamePlay();
@@ -90,6 +92,8 @@ export class UIManager extends Component {
     private pauseScreenCallBack = (type: string): void => {
         switch (type) {
             case "resumebutton":
+                this.InGameScreen.show();
+                this._sceneManager.pauseGamePlay(false);
                 break;
             case "gotomenubutton":
                 this._sceneManager.OnGoToMenu();
