@@ -58,10 +58,11 @@ export class UIManager extends Component {
         this.PauseScreen.init(option);
     }
 
-    public showGameOverScreen(): void{
+    public showGameOverScreen(score : number): void{
         this.InGameScreen.hide();
         let option: GameOverScreenOption = {
-            callback: this.gameOverScreenCallBack.bind(this)
+            callback: this.gameOverScreenCallBack.bind(this),
+            score : score
         };
         this.GameOverScreen.init(option);
     }

@@ -1,4 +1,5 @@
-import { _decorator, Animation, Button, Component, Node, Sprite, SpriteFrame } from 'cc';
+import { _decorator, Animation, AudioClip, Button, Color, Component, Node, Sprite, SpriteFrame } from 'cc';
+import { SoundController } from '../Manager/SoundController';
 const { ccclass, property } = _decorator;
 
 @ccclass('CardCtrl')
@@ -16,7 +17,8 @@ export class CardCtrl extends Component {
     public initialiseCard(option: CardOption): void {
         this._option = option;
         this.cardId = option.cardId;
-        this.lightBG.spriteFrame = this._option.newSpriteFrame;
+        // this.lightBG.spriteFrame = this._option.newSpriteFrame;
+        this.lightBG.color = this._option.color;
         this.playAnimation('normal')
     }
 
@@ -25,6 +27,7 @@ export class CardCtrl extends Component {
     }
     public onPlayEffects() : void{
         this.playAnimation('highlight');
+        SoundController.instance.playOneShot(this._option.sfxClip);
     }
 
     private playAnimation(animName : string): void{
@@ -42,7 +45,9 @@ export class CardCtrl extends Component {
 
 export interface CardOption {
     newSpriteFrame : SpriteFrame;
+    color : Color;
     cardId : number;
+    sfxClip :AudioClip;
     callback?: (card: CardCtrl) => void;
 }
 

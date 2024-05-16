@@ -1,18 +1,25 @@
-import { _decorator, Component, Node, UITransform, Prefab, instantiate, Vec3, SpriteFrame } from 'cc';
+import { _decorator, Component, Node, UITransform, Prefab, instantiate, Vec3, SpriteFrame, Sprite, color, Color, AudioClip } from 'cc';
 import { SceneManager } from '../Manager/SceneManager';
 import { CardCtrl } from './CardCtrl';
 import { CardOption } from "./CardCtrl";
 import { Difficulty } from '../UIScreen/DifficultySelectionScreenCtrl';
+import { SoundController } from '../Manager/SoundController';
 const { ccclass, property } = _decorator;
 
 @ccclass('CardManager')
 export class CardManager extends Component {
    // Properties
+    @property(Sprite)
+    private GridBG: Sprite = null;
     @property(Prefab)
     private cardPrefab: Prefab = null;
     CardCtrl
     @property({ type: [SpriteFrame] })
     spriteArray: SpriteFrame[] = [];
+    @property({ type: [Color] })
+    colorArray: Color[] = [];
+    @property({ type: [AudioClip] })
+    sfxArray: AudioClip[] = [];
     @property(Node)
     private grid: Node = null;
     private columnCount: number = 10; 
@@ -21,6 +28,8 @@ export class CardManager extends Component {
     private xPadding: number = 0; 
     @property
     private yPadding: number = 0; 
+    @property(AudioClip)
+    wrongChoiceSFX: AudioClip = null;
 
     // event
     public static onScoreIncrement: ((score: number) => void) | null = null;
@@ -46,20 +55,21 @@ export class CardManager extends Component {
         this._type = type;
         switch (this._type ) {
             case Difficulty.Easy:
-                this.columnCount = 2;
-                this.rowCount = 2;
+                this.columnCount = 4;
+                this.rowCount = 1;
                 break;
             case Difficulty.Medium:
-                this.columnCount = 3;
-                this.rowCount = 2;
+                this.columnCount = 6;
+                this.rowCount = 1;
                 break;
             case Difficulty.Hard:
-                this.columnCount = 4;
-                this.rowCount = 2;
+                this.columnCount = 8;
+                this.rowCount = 1;
             break;
         }
         this.resetGame();
         this.createCardGrid();
+        this.playInitEffects(100);
     }
     
     public resetGame(): void{
@@ -70,7 +80,6 @@ export class CardManager extends Component {
     }
 
     public startGame():void{
-        this.playInitEffects(100);
         this.playCpuTurn();
     }
 
@@ -89,10 +98,12 @@ export class CardManager extends Component {
             card.node.destroy();
         }
         this._cards = [];
+        this.GridBG.enabled = false;
     }
 
     private createCardGrid(): void{
-        let sprintCounter = 0;
+        this.GridBG.enabled = true;
+        let counter = 0;
         const uiTransform = this.grid.getComponent(UITransform);
         const itemWidth = uiTransform.width / this.columnCount;
         const itemHeight = uiTransform.height / this.rowCount;
@@ -111,16 +122,18 @@ export class CardManager extends Component {
                 //Init card
                 const card = cardItem.getComponent(CardCtrl);
                 let cardOption: CardOption = {
-                    newSpriteFrame : this.spriteArray[sprintCounter],
-                    cardId : sprintCounter,
+                    newSpriteFrame : this.spriteArray[counter],
+                    color : this.colorArray[counter],
+                    cardId : counter,
+                    sfxClip : this.sfxArray[counter],
                     callback: this.onCardButtonClick.bind(cardItem)
                 };
                 card.initialiseCard(cardOption);
                 this._cards.push(card);
 
-                sprintCounter++;
-                if(sprintCounter>=this.spriteArray.length){
-                    sprintCounter = 0;
+                counter++;
+                if(counter>=this.spriteArray.length){
+                    counter = 0;
                 }
 
                 //naming card, debug purpose only
@@ -153,7 +166,8 @@ export class CardManager extends Component {
         }else{
             // trigger game over
             this._isGameCompleted = true;
-            this._sceneManager.onCardMatchFail();
+            this._sceneManager.onCardMatchFail(this._score);
+            SoundController.instance.playOneShot(this.wrongChoiceSFX);
             console.log("checkForCardMarch failed "+cardId+"  "+this._turns[this._playerTurnCounter]);
         }
     }
@@ -199,8 +213,8 @@ export class CardManager extends Component {
                     console.log("playEffects ends "+this._isPlayerTurn+"  "+this._playerTurnCounter);
                     clearInterval(this.intervalId); // Stop the interval when all elements have been processed
                 }
-            }, 600);//wait time between each cpu turn
-        }, 1000); // wait time to start cpu turn
+            }, 800);//wait time between each cpu turn
+        }, 600); // wait time to start cpu turn
     }
 }
 

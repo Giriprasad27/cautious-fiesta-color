@@ -2,6 +2,7 @@ import { _decorator, Component, instantiate, Node, Prefab } from 'cc';
 import { UIManager } from './UIManager';
 import { CardManager } from '../Card/CardManager';
 import { Difficulty } from '../UIScreen/DifficultySelectionScreenCtrl';
+import { SoundController } from './SoundController';
 
 // import { PingPong } from '../Card/PingPong';
 const { ccclass, property } = _decorator;
@@ -36,8 +37,8 @@ export class SceneManager extends Component {
         this.CardManager.pauseGame(val);
     }
 
-    public onCardMatchFail(): void{
-        this.UIManager.showGameOverScreen();
+    public onCardMatchFail(score : number): void{
+        this.UIManager.showGameOverScreen(score);
     }
 
     public OnRestartGame(): void{
@@ -51,6 +52,7 @@ export class SceneManager extends Component {
     }
 
     private init() : void{
+        SoundController.instance.playBackgroundMusic();
         this.UIManager.initUIManager(this);
     }
 }

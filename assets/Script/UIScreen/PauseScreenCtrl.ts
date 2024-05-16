@@ -27,14 +27,14 @@ export class PauseScreenCtrl extends UIScreenBaseCtrl {
             this._option.callback("resumebutton");
         }
         this.hide();
-        SoundController.instance.playOneShot("ButtonClick");
+        SoundController.instance.PlayButtonClick();
     }
     private onMenuButtonClick(): void {
         if (this._option.callback) {
             this._option.callback("gotomenubutton");
         }
         this.hide();
-        SoundController.instance.playOneShot("ButtonClick");
+        SoundController.instance.PlayButtonClick();
     }
 }
 export class PauseScreenOption extends UIScreenOption{

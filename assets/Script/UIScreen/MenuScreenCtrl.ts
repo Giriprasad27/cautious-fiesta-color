@@ -23,7 +23,7 @@ export class MenuScreenCtrl extends UIScreenBaseCtrl {
             this._option.callback("playbutton");
         }
         this.hide();
-        SoundController.instance.playOneShot("ButtonClick");
+        SoundController.instance.PlayButtonClick();
     }
 }
 export class MenuScreenOption extends UIScreenOption{

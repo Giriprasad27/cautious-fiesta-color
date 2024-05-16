@@ -43,6 +43,7 @@ export class DifficultySelectionScreenCtrl extends UIScreenBaseCtrl {
         if (this._option.selectionCallback) {
             this._option.selectionCallback(difficulty);
         }
+        SoundController.instance.PlayButtonClick();
         this.hide();
     }
 }

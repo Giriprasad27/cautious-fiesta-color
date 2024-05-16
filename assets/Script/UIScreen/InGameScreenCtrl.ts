@@ -42,14 +42,14 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
         if (this._option.callback) {
             this._option.callback("taptostart");
         }
-        SoundController.instance.playOneShot("ButtonClick");
+        SoundController.instance.PlayButtonClick();
     }
 
     private onPauseButtonClick(): void {
         if (this._option.callback) {
             this._option.callback("pausebutton");
         }
-        SoundController.instance.playOneShot("ButtonClick");
+        SoundController.instance.PlayButtonClick();
     }
 
     private updateScoreLabel = (score: number): void => {
