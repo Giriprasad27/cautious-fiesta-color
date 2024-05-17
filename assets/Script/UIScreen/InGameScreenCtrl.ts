@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Label, Node, Sprite, SpriteFrame, sys } from 'cc';
+import { _decorator, Button, Component, Label, Node, Sprite, SpriteFrame, sys, Animation } from 'cc';
 import { UIScreenBaseCtrl, UIScreenOption } from './UIScreenBaseCtrl';
 import { CardManager } from '../Card/CardManager';
 import { SoundController } from '../Manager/SoundController';
@@ -26,6 +26,11 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
     RepeatIcon: SpriteFrame = null;
     @property(SpriteFrame)
     ListenIcon: SpriteFrame = null;
+
+    @property(Animation)
+    BonusObjectAnimation: Animation = null;
+    @property(Label)
+    BonusScore: Label = null;
     private _option : InGameScreenOption;
 
     private currentHighscore : number = 0;
@@ -43,7 +48,7 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
         this.IngamePanel.active = false;
         this.PauseButton.node.active = true;
         this.Score.string = "0";
-
+        
         const currentHighScore = sys.localStorage.getItem('highScore');
         if (currentHighScore !== null) {
             this.currentHighscore = parseInt(currentHighScore);
@@ -53,6 +58,7 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
         }
 
         CardManager.onScoreIncrement = this.updateScoreLabel;
+        CardManager.onBonusRewardClaimed = this.showBonusReward;
         CardManager.onTurnChange = this.updateTurnLabel;
     }
 
@@ -78,6 +84,15 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
         if(score>this.currentHighscore){
             this.HighScore.string = score.toString();
         }
+    }
+
+    private showBonusReward = (score: number): void => {
+        this.BonusObjectAnimation.node.active = true;
+        this.BonusObjectAnimation.play("OnBonusTrigger");
+        this.BonusScore.string = "+ "+score.toString();
+        setTimeout(() => {
+            this.BonusObjectAnimation.node.active = false;
+        },800);
     }
 
     private updateTurnLabel = (isPlayerTurn: boolean): void => {

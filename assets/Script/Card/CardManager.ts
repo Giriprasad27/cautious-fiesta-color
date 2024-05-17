@@ -36,6 +36,7 @@ export class CardManager extends Component {
     // event
     public static onScoreIncrement: ((score: number) => void) | null = null;
     public static onTurnChange: ((isPlayerTurn: boolean) => void) | null = null;
+    public static onBonusRewardClaimed: ((score: number) => void) | null = null;
     
 
     // private paramenters
@@ -50,6 +51,7 @@ export class CardManager extends Component {
     private _isGameCompleted : boolean = false;
     private _isGamePaused : boolean = false;
     private _type : Difficulty = Difficulty.Easy;
+    private _bonusScore = 10;
 
     private _sceneManager: SceneManager;
     public initCardManager(type : Difficulty, sceneManager :SceneManager ): void{
@@ -59,14 +61,20 @@ export class CardManager extends Component {
             case Difficulty.Easy:
                 this.columnCount = 4;
                 this.rowCount = 1;
+                this._bonusScore = 1;
+                this._scoreIncrementor = 10;
                 break;
             case Difficulty.Medium:
                 this.columnCount = 6;
                 this.rowCount = 1;
+                this._bonusScore = 3;
+                this._scoreIncrementor = 12;
                 break;
             case Difficulty.Hard:
                 this.columnCount = 8;
                 this.rowCount = 1;
+                this._bonusScore = 5;
+                this._scoreIncrementor = 15;
             break;
         }
         this.resetGame();
@@ -148,9 +156,16 @@ export class CardManager extends Component {
         if(this._isPlayerTurn && !this._isGamePaused && !this._isGameCompleted){
             card.onPlayEffects();
             this.checkForCardMarch(card.cardId);
-            if(this._playerTurnCounter == this._turns.length){
+            if(this._playerTurnCounter == this._turns.length && !this._isGameCompleted){
                 this._isPlayerTurn = false;
                 this.playCpuTurn();
+                this._score += this._bonusScore;
+                if(CardManager.onScoreIncrement){
+                    CardManager.onScoreIncrement(this._score);
+                }
+                if(CardManager.onBonusRewardClaimed){
+                    CardManager.onBonusRewardClaimed(this._bonusScore);
+                }
                 SoundController.instance.playOneShot(this.roundComplete);
             }
         }

@@ -650,6 +650,8 @@
       "__id__": 0
     },
     "fileId": "78YZDqCG9J/KclTnSeJL6F",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2026,6 +2028,8 @@
       "__id__": 0
     },
     "fileId": "8bEp6viuRI6Y7owjtIO03G",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2143,6 +2147,8 @@
       "__id__": 0
     },
     "fileId": "dchTXffENH24Ibdg7otPBb",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2199,7 +2205,10 @@
       "__uuid__": "016d5c71-e1b2-4ab2-9e0e-c87439931c51",
       "__expectedType__": "cc.AudioClip"
     },
-    "highScoreSfx": null,
+    "highScoreSfx": {
+      "__uuid__": "9fe52bca-f7e4-4d78-a7b7-bc1b4cf7689a",
+      "__expectedType__": "cc.AudioClip"
+    },
     "newHighScoreObject": {
       "__id__": 59
     },

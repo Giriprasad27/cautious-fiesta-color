@@ -15,6 +15,7 @@ export class SceneManager extends Component {
     @property(CardManager)
     private CardManager: CardManager = null;
 
+    private _currentDifficultyType : Difficulty = Difficulty.Easy;
     start() {
         this.init();
     }
@@ -23,6 +24,7 @@ export class SceneManager extends Component {
     }
 
     public goToGamePlayScreen(type : Difficulty): void{
+        this._currentDifficultyType = type;
         this.CardManager.initCardManager(type,this);
         this.UIManager.showInGameUIScreen();
     }
