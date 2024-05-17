@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, Label, Node } from 'cc';
+import { _decorator, Button, Component, Label, Node, Sprite, SpriteFrame, sys } from 'cc';
 import { UIScreenBaseCtrl, UIScreenOption } from './UIScreenBaseCtrl';
 import { CardManager } from '../Card/CardManager';
 import { SoundController } from '../Manager/SoundController';
@@ -18,7 +18,18 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
     Turn: Label = null;
     @property(Label)
     Score: Label = null;
+    @property(Label)
+    HighScore: Label = null;
+    @property(Sprite)
+    TurnIcon: Sprite = null;
+    @property(SpriteFrame)
+    RepeatIcon: SpriteFrame = null;
+    @property(SpriteFrame)
+    ListenIcon: SpriteFrame = null;
     private _option : InGameScreenOption;
+
+    private currentHighscore : number = 0;
+
 
     protected onLoad(): void {
         this.TapToStartButton.node.on(Button.EventType.CLICK, this.onTapToStartuttonClick, this);
@@ -31,7 +42,16 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
         this.TapPanel.active = true;
         this.IngamePanel.active = false;
         this.PauseButton.node.active = true;
-        this.Score.string = "Score: 0";
+        this.Score.string = "0";
+
+        const currentHighScore = sys.localStorage.getItem('highScore');
+        if (currentHighScore !== null) {
+            this.currentHighscore = parseInt(currentHighScore);
+            this.HighScore.string = currentHighScore;
+        } else {
+            this.HighScore.string = "0";
+        }
+
         CardManager.onScoreIncrement = this.updateScoreLabel;
         CardManager.onTurnChange = this.updateTurnLabel;
     }
@@ -54,12 +74,23 @@ export class InGameScreenCtrl extends UIScreenBaseCtrl{
 
     private updateScoreLabel = (score: number): void => {
         // Update the score label with the new score
-        this.Score.string = "Score: "+score;
+        this.Score.string = score.toString();
+        if(score>this.currentHighscore){
+            this.HighScore.string = score.toString();
+        }
     }
 
-    private updateTurnLabel = (turn: string): void => {
-        this.Turn.string = "Turn: "+turn;
-        
+    private updateTurnLabel = (isPlayerTurn: boolean): void => {
+        setTimeout(() => {
+            if(isPlayerTurn){
+                this.Turn.string = "Repeat";
+                this.TurnIcon.spriteFrame = this.RepeatIcon;
+            }
+            else{
+                this.Turn.string = "Listen";
+                this.TurnIcon.spriteFrame = this.ListenIcon
+            }
+        },800);
     }
 }
 

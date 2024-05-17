@@ -13,13 +13,16 @@ export class GameOverScreenCtrl extends UIScreenBaseCtrl {
     Score: Label = null;
     @property(AudioClip)
     gameOverSFX: AudioClip = null;
+    @property(AudioClip)
+    highScoreSfx: AudioClip = null;
+    @property(Node)
+    newHighScoreObject: Node = null;
 
     private _option : GameOverScreenOption;
 
     protected onLoad(): void {
         this.RetryButton.node.on(Button.EventType.CLICK, this.onRetryButtonClick, this);
         this.GoToMenuButton.node.on(Button.EventType.CLICK, this.onGoToMenuButtonClick, this);
-        SoundController.instance.playOneShot(this.gameOverSFX);
     }
 
     private onRetryButtonClick(): void {
@@ -41,11 +44,21 @@ export class GameOverScreenCtrl extends UIScreenBaseCtrl {
         super.init(option);
         this._option = option;
         this.Score.string = "Score: "+this._option.score;
+        SoundController.instance.playOneShot(this.gameOverSFX);
+        this.newHighScoreObject.active = false;
+        if(this._option.isNewHighScore){
+            setTimeout(() => {
+                this.newHighScoreObject.active = this._option.isNewHighScore;
+                SoundController.instance.playOneShot(this.highScoreSfx);
+            }, 1600);
+        }
+        
     }
 
 }
 
 export class GameOverScreenOption extends UIScreenOption{
     public score :number = 0;
+    public isNewHighScore :boolean = false;
 }
 

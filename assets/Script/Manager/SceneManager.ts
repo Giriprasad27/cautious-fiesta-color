@@ -1,4 +1,4 @@
-import { _decorator, Component, instantiate, Node, Prefab } from 'cc';
+import { _decorator, Component, instantiate, Node, Prefab, sys } from 'cc';
 import { UIManager } from './UIManager';
 import { CardManager } from '../Card/CardManager';
 import { Difficulty } from '../UIScreen/DifficultySelectionScreenCtrl';
@@ -38,7 +38,19 @@ export class SceneManager extends Component {
     }
 
     public onCardMatchFail(score : number): void{
-        this.UIManager.showGameOverScreen(score);
+        const currentHighScore = sys.localStorage.getItem('highScore');
+        let newHighScore : boolean = false;
+        if (currentHighScore !== null) {
+            const currenthighscore = parseInt(currentHighScore);
+            if(score>currenthighscore){
+                sys.localStorage.setItem('highScore', score.toString());
+                newHighScore = true;
+            }
+        } else {
+            sys.localStorage.setItem('highScore', score.toString());
+            newHighScore = true;
+        }
+        this.UIManager.showGameOverScreen(score,newHighScore);
     }
 
     public OnRestartGame(): void{

@@ -30,10 +30,12 @@ export class CardManager extends Component {
     private yPadding: number = 0; 
     @property(AudioClip)
     wrongChoiceSFX: AudioClip = null;
+    @property(AudioClip)
+    roundComplete: AudioClip = null;
 
     // event
     public static onScoreIncrement: ((score: number) => void) | null = null;
-    public static onTurnChange: ((turn: string) => void) | null = null;
+    public static onTurnChange: ((isPlayerTurn: boolean) => void) | null = null;
     
 
     // private paramenters
@@ -149,6 +151,7 @@ export class CardManager extends Component {
             if(this._playerTurnCounter == this._turns.length){
                 this._isPlayerTurn = false;
                 this.playCpuTurn();
+                SoundController.instance.playOneShot(this.roundComplete);
             }
         }
     }
@@ -190,7 +193,7 @@ export class CardManager extends Component {
         this._isPlayerTurn = false;
         this._playerTurnCounter = 0;
         if(CardManager.onTurnChange){
-            CardManager.onTurnChange("CPU");
+            CardManager.onTurnChange(this._isPlayerTurn);
         }
         let randomId = Math.floor(Math.random() * this._cards.length);
         this._turns.push(randomId);
@@ -208,7 +211,7 @@ export class CardManager extends Component {
                     this._isPlayerTurn = true;
                     this._playerTurnCounter = 0;
                     if(CardManager.onTurnChange){
-                        CardManager.onTurnChange("USER");
+                        CardManager.onTurnChange(this._isPlayerTurn);
                     }
                     console.log("playEffects ends "+this._isPlayerTurn+"  "+this._playerTurnCounter);
                     clearInterval(this.intervalId); // Stop the interval when all elements have been processed
