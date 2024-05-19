@@ -92,7 +92,7 @@
         "__id__": 109
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 133
@@ -1554,7 +1554,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 25.42,
+      "x": 51.42,
       "y": 0,
       "z": 0
     },
@@ -1630,7 +1630,7 @@
       "a": 255
     },
     "_string": "",
-    "_horizontalAlign": 1,
+    "_horizontalAlign": 2,
     "_verticalAlign": 1,
     "_actualFontSize": 30,
     "_fontSize": 30,
@@ -1669,7 +1669,7 @@
     "_alignFlags": 34,
     "_target": null,
     "_left": 0,
-    "_right": 47.58,
+    "_right": 21.58,
     "_top": 2.8000000000000007,
     "_bottom": 0,
     "_horizontalCenter": 33.46149999999989,
@@ -2058,6 +2058,8 @@
       "__id__": 0
     },
     "fileId": "5enUCTINRHQp96wENHEiS7",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
