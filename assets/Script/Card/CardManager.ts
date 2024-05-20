@@ -11,6 +11,8 @@ export class CardManager extends Component {
    // Properties
     @property(Sprite)
     private GridBG: Sprite = null;
+    @property(Sprite)
+    private FraneOvelay: Sprite = null;
     @property(Prefab)
     private cardPrefab: Prefab = null;
     CardCtrl
@@ -87,6 +89,7 @@ export class CardManager extends Component {
         this._score = 0;
         this._isGameCompleted = false;
         this._isGamePaused = false;
+        this.FraneOvelay.enabled = false;
     }
 
     public startGame():void{
@@ -218,6 +221,7 @@ export class CardManager extends Component {
     private loopCputurn():void {
         setTimeout(() => {
             let index = 0;
+            this.FraneOvelay.enabled = true;
             this.intervalId = setInterval(() => {
                 if (index < this._turns.length) {
                     this._cards[this._turns[index]].onPlayEffects();
@@ -228,6 +232,7 @@ export class CardManager extends Component {
                     if(CardManager.onTurnChange){
                         CardManager.onTurnChange(this._isPlayerTurn);
                     }
+                    this.FraneOvelay.enabled = false;
                     console.log("playEffects ends "+this._isPlayerTurn+"  "+this._playerTurnCounter);
                     clearInterval(this.intervalId); // Stop the interval when all elements have been processed
                 }
