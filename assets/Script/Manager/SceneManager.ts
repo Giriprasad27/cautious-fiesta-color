@@ -3,6 +3,7 @@ import { UIManager } from './UIManager';
 import { CardManager } from '../Card/CardManager';
 import { Difficulty } from '../UIScreen/DifficultySelectionScreenCtrl';
 import { SoundController } from './SoundController';
+import OrientationManager from '../../LoadScene/OrientationManager';
 
 // import { PingPong } from '../Card/PingPong';
 const { ccclass, property } = _decorator;
@@ -66,6 +67,7 @@ export class SceneManager extends Component {
     }
 
     private init() : void{
+        OrientationManager.changeOrientation(1);
         SoundController.instance.playBackgroundMusic();
         this.UIManager.initUIManager(this);
     }
