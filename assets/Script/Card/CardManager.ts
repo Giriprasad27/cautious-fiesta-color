@@ -112,6 +112,7 @@ export class CardManager extends Component {
         }
         this._cards = [];
         this.GridBG.enabled = false;
+        this.FraneOvelay.enabled = false;
     }
 
     private createCardGrid(): void{
